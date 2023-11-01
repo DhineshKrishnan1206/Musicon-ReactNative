@@ -18,7 +18,9 @@ mongoose
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error(err));
 
-
+  app.get('/', (req, res) => {
+    res.send('Hey this is my API running 🥳')
+  })
 app.use('/api/auth', authRoutes);
 app.use('/api', commentRoutes);
 const PORT = process.env.PORT || 3000;
