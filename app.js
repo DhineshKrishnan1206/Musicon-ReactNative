@@ -7,21 +7,21 @@ const cors = require('cors');
 
 const app = express();
 const commentRoutes = require("./routes/Comment");
+const playlistRoutes = require("./routes/Playlist");
 app.use(bodyParser.json());
-
-
 app.use(cors());
 
+mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('MongoDB connected');
+    // Define routes and other server configurations here
 
-mongoose
-  .connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error(err));
-
-  app.get('/', (req, res) => {
-    res.send('Hey this is my API running 🥳')
+    app.use('/api/auth', authRoutes);
+    app.use('/api', commentRoutes);
+    app.use('/api', playlistRoutes);
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
   })
-app.use('/api/auth', authRoutes);
-app.use('/api', commentRoutes);
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+  .catch((err) => console.error(err));
